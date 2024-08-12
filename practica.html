@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contador Pomodoro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .timer {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #ff6347;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #ff4500;
+        }
+        select {
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Pomodoro Timer</h1>
+        <div class="timer" id="timer">25:00</div>
+
+        <label for="work-duration">Duración del trabajo:</label>
+        <select id="work-duration">
+            <option value="25">25 minutos</option>
+            <option value="30">30 minutos</option>
+            <option value="35">35 minutos</option>
+            <option value="40">40 minutos</option>
+        </select>
+
+        <label for="break-duration">Duración del descanso:</label>
+        <select id="break-duration">
+            <option value="5">5 minutos</option>
+            <option value="10">10 minutos</option>
+            <option value="15">15 minutos</option>
+            <option value="20">20 minutos</option>
+        </select>
+
+        <button onclick="startTimer()">Iniciar</button>
+        <button onclick="resetTimer()">Reiniciar</button>
+    </div>
+
+    <script>
+        let workTime;
+        let breakTime;
+        let time;
+        let timerRunning = false;
+        let interval;
+
+        function startTimer() {
+            if (!timerRunning) {
+                // Obtener los valores seleccionados por el usuario
+                workTime = parseInt(document.getElementById("work-duration").value) * 60;
+                breakTime = parseInt(document.getElementById("break-duration").value) * 60;
+                time = workTime;
+
+                timerRunning = true;
+                interval = setInterval(countdown, 1000);
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(interval);
+            timerRunning = false;
+            time = workTime;
+            updateTimerDisplay();
+        }
+
+        function countdown() {
+            time--;
+            if (time < 0) {
+                if (time === -1) {
+                    alert("¡Hora de tomar un descanso!");
+                    time = breakTime;
+                } else if (time === -breakTime - 1) {
+                    alert("¡Tiempo de trabajar!");
+                    time = workTime;
+                }
+            }
+            updateTimerDisplay();
+        }
+
+        function updateTimerDisplay() {
+            let minutes = Math.floor(time / 60);
+            let seconds = time % 60;
+            if (seconds < 10) seconds = "0" + seconds;
+            document.getElementById("timer").innerText = `${minutes}:${seconds}`;
+        }
+    </script>
+</body>
+</html>
